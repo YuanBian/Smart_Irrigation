@@ -6,6 +6,9 @@ import re
 from dotenv import load_dotenv
 import datetime
 
+load_dotenv()
+WEATHER_API = os.getenv("WEATHER_API")
+
 app = Flask(__name__)
 
 @app.route("/weather", methods=["GET"])
