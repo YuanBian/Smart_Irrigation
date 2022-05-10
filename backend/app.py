@@ -25,14 +25,18 @@ def GET_change_configs(value):
   app.config['TESTING'] = value
   return app.config['TESTING']
 
-@app.route("/sensor/", methods=["GET"])
+@app.route("/sensor", methods=["GET"])
 def GET_sensor():
   return app.config['TESTING']
 
-@app.route("/water/", methods=["GET"])
+@app.route("/water", methods=["GET"])
 def GET_water():
   return 0
 
+@app.route("/pi_temperature", methods=["GET"])
+def GET_pi_temperature():
+  return 0
+  
 # @app.route("/change_config/<value>", methods=["GET"])
 # def GET_weather():
 #  config_f = open("/Users/yuanbian/Desktop/smart_irrigation/backend/config.json","r")
