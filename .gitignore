@@ -2,3 +2,5 @@ venv
 .env
 .ipynb*
 *.ipynb
+__pycache__
+hardware_controllers.py
