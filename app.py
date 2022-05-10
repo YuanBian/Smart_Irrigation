@@ -46,3 +46,9 @@ def GET_pi_temperature():
 def GET_analysis(mode):
     return 0
 
+# get alerts from weather api
+# additional feature: send "Frost Warning" alert when the next day's average temperature drops below 2 degree Celsius
+@app.route("/alerts", methods=["GET"])
+def GET_alerts():
+    return 0
+

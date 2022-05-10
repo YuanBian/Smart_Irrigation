@@ -17,4 +17,6 @@ app.py :
  5. use sensors now!
  6. Raspberry Pi temperature
  7. Analysis
+ 8. Alerts
+ 9. Get weather from API (backend will use it)
 ]
