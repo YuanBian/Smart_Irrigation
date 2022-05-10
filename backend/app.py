@@ -17,26 +17,31 @@ WEATHER_API = os.getenv("WEATHER_API")
 
 app = Flask(__name__)
 
-app.config['TESTING'] = "10"
-
+app.config.update(
+  valveTime= 10,
+  photoTimeInterval= 60,
+  moistureSensorCheckTime= 60,
+  emails= ["yuanbian95@gmail.com", "mklimuszka@gmail.com"],
+  frostWarningThreshold= 2
+)
 
 @app.route("/configs/<value>", methods=["GET"])
 def GET_change_configs(value):
-  app.config['TESTING'] = value
-  return app.config['TESTING']
+  app.config["valveTime"] = "WITH SOME VALUES"
+  return 0
 
 @app.route("/sensor", methods=["GET"])
 def GET_sensor():
-  return app.config['TESTING']
-
-@app.route("/water", methods=["GET"])
-def GET_water():
   return 0
 
-@app.route("/pi_temperature", methods=["GET"])
-def GET_pi_temperature():
-  return 0
-  
+# @app.route("/water", methods=["GET"])
+# def GET_water():
+#   return 0
+
+# @app.route("/pi_temperature", methods=["GET"])
+# def GET_pi_temperature():
+#   return 0
+
 # @app.route("/change_config/<value>", methods=["GET"])
 # def GET_weather():
 #  config_f = open("/Users/yuanbian/Desktop/smart_irrigation/backend/config.json","r")
