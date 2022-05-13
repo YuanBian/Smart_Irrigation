@@ -1,7 +1,1 @@
-{
-  "valveTime": 10101,
-  "photoTimeInterval": 60,
-  "moistureSensorCheckTime": 60,
-  "emails": ["yuanbian95@gmail.com", "mklimuszka@gmail.com"],
-  "frostWarningThreshold": 2
-}
+{}

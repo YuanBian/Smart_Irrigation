@@ -4,3 +4,7 @@ venv
 *.ipynb
 __pycache__
 hardware_controllers.py
+*.jpg
+*.jpeg
+*.png
+*.mp4

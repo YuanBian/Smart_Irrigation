@@ -1,0 +1,12 @@
+{
+    "VALVE_TIME": 2222,
+    "PHOTO_TIME_INTERVAL": 60,
+    "MOISTURE_SENSOR_INTERVAL": 60,
+    "FROST_WARNING_THRESHOLD": 2,
+    "SENSOR_INPUTS": [
+        21
+    ],
+    "VALVE_OUTPUTS": [
+        20
+    ]
+}
