@@ -59,12 +59,7 @@ app = Flask(__name__)
 # render frontend
 @app.route("/admin_page", methods=["GET"])
 def GET_admin_page():
-    return ""
-
-# render frontend
-@app.route("/analysis_page", methods=["GET"])
-def GET_analysis_page():
-    return ""
+    return render_template("admin_page.html")
 
 # show current view of garden
 @app.route("/watch", methods=["GET"])
@@ -76,19 +71,19 @@ def GET_watch():
 def GET_change_configs():
     updated_configs = dict(request.form)
     res = requests.post('http://127.0.0.1:5000/configs', data=json.dumps(updated_configs))
-    return res
+    return "Status code: "+str(res.status_code)
 
 # water now
 @app.route("/water_now", methods=["GET"])
 def GET_waterNow():
-    r = requests.get("http://127.0.0.1:5000/pi_temperature")
-    return r
+    res = requests.get("http://127.0.0.1:5000/water")
+    return "Status code: "+str(res.status_code)
 
 # use sensor now
 @app.route("/get_sensor_now", methods=["GET"])
 def GET_sensor():
-    r = requests.get("http://127.0.0.1:5000/pi_temperature").json()
-    return 0
+    res = requests.get("http://127.0.0.1:5000/sensor").json()
+    return "Status code: "+str(res.status_code)
 
 # get pi temperature
 @app.route("/pi_temperature", methods=["GET"])
@@ -107,7 +102,7 @@ def GET_camera():
     return "img"
 
 # analysis
-@app.route("/analysis/<mode>", methods=["GET"])
+@app.route("/analysis", methods=["GET"])
 def GET_analysis(mode):
     return 0
 

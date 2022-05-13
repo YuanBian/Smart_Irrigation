@@ -13,7 +13,6 @@ import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
-
 app.config.from_file("config.json", load=json.load)
 
 # set up pi GPIO
@@ -60,15 +59,29 @@ def water_schedule():
       rain_level = today_data["rain"]
   except:
       pass
-  if rain_level:
+  
+  ctr = 0
+  for p in sensors_pins:
+      # if soil is dry
+      if GPIO.input(p):
+          ctr += 1
+  if not rain_level and ctr >= len(sensors_pins) /  2:
       open_valve()
 
+def get_temperature():
+    temperature = os.popen('vcgencmd measure_temp').read()
+    temp_int = temperature[5:-3]
+    return temp_int
+
+def temperature_job():
+    with open(f'temperature.txt', 'a') as f:
+        f.write(get_temperature() + '\n')
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(water_schedule,'cron',hour='8, 18', minute=0, timezone="America/Chicago")
-# sched.add_job(water_schedule,'interval',minutes=60)
+#sched.add_job(water_schedule,'cron',hour='8, 18', minute=0, timezone="America/Chicago")
+sched.add_job(water_schedule,'interval',seconds=15)
 sched.add_job(camera_schedule,'interval',minutes=60)
-
+sched.add_job(temperature_job, 'interval', seconds=15)
 sched.start()
 
 
@@ -80,12 +93,23 @@ atexit.register(exit)
 
 @app.route("/configs", methods=["POST"])
 def GET_change_configs():
-  updated_configs = request.get_json(force=True)
-  print(updated_configs)
+  updated_configs_raw = request.get_data().decode("utf-8")
+  updated_configs = json.loads(updated_configs_raw, parse_int=int)
+  for key in updated_configs:
+    print(key+": "+updated_configs[key])
+    if updated_configs[key]!="":
+      if key=="SENSOR_INPUTS" or key=="VALVE_OUTPUTS":
+        updated_configs[key] = [int(x) for x in updated_configs[key].split(" ")]
+        print(updated_configs[key])
+      else:
+        updated_configs[key]= int(updated_configs[key])
+    else:
+      updated_configs[key]= int(app.config[key])
+      print(type(updated_configs[key]))
   f = open("config.json", "w")
-  f.write(json.dumps(updated_configs, indent=4))
+  f.write(json.dumps(updated_configs))
   f.close()
-  return request
+  return "success"
 
 @app.route("/sensor", methods=["GET"])
 def GET_sensor():
@@ -109,8 +133,7 @@ def GET_water():
   
 @app.route("/pi_temperature", methods=["GET"])
 def GET_pi_temperature():
-    temperature = os.popen('vcgencmd measure_temp').read()
-    temp_int = temperature[5:-3]
+    temp_int = get_temperature()
     temp_json = json.dumps({"pi_temperature": temp_int})
     return temp_json
 

@@ -1,0 +1,14 @@
+body {
+    background-color: lightblue;
+}
+
+h1 {
+    color: navy;
+    margin-left: 20px;
+}
+
+#graph {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+}
