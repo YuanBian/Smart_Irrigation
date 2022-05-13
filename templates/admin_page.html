@@ -1,0 +1,42 @@
+<html>
+  <body>
+    <section>
+      <h1>ADMINISTRATION</h1>
+    </section>
+    <form method="POST" action="/configs">
+      <label for="VALVE_TIME">VALVE_TIME (min):</label><br />
+      <input type="number" id="VALVE_TIME" name="VALVE_TIME" /><br />
+      <label for="PHOTO_TIME_INTERVAL">PHOTO_TIME_INTERVAL (min):</label><br />
+      <input
+        type="number"
+        id="PHOTO_TIME_INTERVAL"
+        name="PHOTO_TIME_INTERVAL"
+      /><br />
+      <label for="MOISTURE_SENSOR_INTERVAL"
+        >MOISTURE_SENSOR_INTERVAL (hour):</label
+      ><br />
+      <input
+        type="number"
+        id="MOISTURE_SENSOR_INTERVAL"
+        name="MOISTURE_SENSOR_INTERVAL"
+      /><br />
+      <label for="FROST_WARNING_THRESHOLD"
+        >FROST_WARNING_THRESHOLD (Celsius):</label
+      ><br />
+      <input
+        type="number"
+        id="FROST_WARNING_THRESHOLD"
+        name="FROST_WARNING_THRESHOLD"
+      /><br />
+      <label for="SENSOR_INPUTS">SENSOR_INPUTS (pin number):</label><br />
+      <input type="number" id="SENSOR_INPUTS" name="SENSOR_INPUTS" /><br />
+      <label for="VALVE_OUTPUTS">VALVE_OUTPUTS (pin number):</label><br />
+      <input type="number" id="VALVE_OUTPUTS" name="VALVE_OUTPUTS" /><br />
+      <input type="submit" value="Submit updated configs" />
+    </form>
+
+    <button class="water_now">Water Now</button>
+    <button class="get_camera_now">Get garden footage now</button>
+    <button class="get_sensor_now">Get sensor data now</button>
+  </body>
+</html>
