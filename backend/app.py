@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import datetime
 import json
 import RPi.GPIO as GPIO
+import matplotlib.pyplot as plt
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -29,11 +30,11 @@ def setup_pins(pins, GPIO_TYPE):
   for pin in pins:
     GPIO.setup(pin, GPIO_TYPE)
 
-valve_pins = app.config["VALVE_OUTPUTS"]
-setup_pins(valve_pins, GPIO.OUT)
-# input for sensors
-sensors_pins = app.config["SENSOR_INPUTS"]
-setup_pins(sensors_pins, GPIO.IN)
+# valve_pins = app.config["VALVE_OUTPUTS"]
+# setup_pins(valve_pins, GPIO.OUT)
+# # input for sensors
+# sensors_pins = app.config["SENSOR_INPUTS"]
+# setup_pins(sensors_pins, GPIO.IN)
 
 def camera_schedule():
   img_path = "/home/pi/garden_services/smart_irrigation/photos/garden.jpg"
@@ -43,12 +44,16 @@ def camera_schedule():
   # return img
 
 def open_valve():
+  valve_pins = app.config["VALVE_OUTPUTS"]
+  setup_pins(valve_pins, GPIO.OUT)
   GPIO.output(valve_pins[0], GPIO.HIGH)
-  systi.sleep(10)
+  systi.sleep(60*app.config["VALVE_TIME"])
   GPIO.output(valve_pins[0], GPIO.LOW)
   return "Watered!"
 
 def water_schedule():
+  sensors_pins = app.config["SENSOR_INPUTS"]
+  setup_pins(sensors_pins, GPIO.IN)
   weather_data = requests.get(
     WEATHER_API
   ).json()
@@ -66,6 +71,7 @@ def water_schedule():
       if GPIO.input(p):
           ctr += 1
   if not rain_level and ctr >= len(sensors_pins) /  2:
+      print("Running water schedule!")
       open_valve()
 
 def get_temperature():
@@ -79,17 +85,17 @@ def temperature_job():
 
 sched = BackgroundScheduler(daemon=True)
 #sched.add_job(water_schedule,'cron',hour='8, 18', minute=0, timezone="America/Chicago")
-sched.add_job(water_schedule,'interval',seconds=15)
+# sched.add_job(water_schedule,'interval',minutes=1)
 sched.add_job(camera_schedule,'interval',minutes=60)
-sched.add_job(temperature_job, 'interval', seconds=15)
+sched.add_job(temperature_job, 'interval', seconds=60)
 sched.start()
 
 
-def exit():
+def exit_cleanup():
   GPIO.cleanup()
   print("GPIO pins are cleaned up!")
 
-atexit.register(exit)
+atexit.register(exit_cleanup)
 
 @app.route("/configs", methods=["POST"])
 def GET_change_configs():
@@ -113,22 +119,38 @@ def GET_change_configs():
 
 @app.route("/sensor", methods=["GET"])
 def GET_sensor():
+  sensors_pins = app.config["SENSOR_INPUTS"]
+  setup_pins(sensors_pins, GPIO.IN)
   input_list = []
   for pin in sensors_pins:
     val = GPIO.input(pin)
     input_list.append(val)
-  return str(input_list)
+  return str(input_list), 200
 
 @app.route("/water", methods=["GET"])
 def GET_water():
   msg = ""
   try:
-    valve_pins = app.config["VALVE_OUTPUTS"]
-    setup_pins(valve_pins, GPIO.OUT)
+    # valve_pins = app.config["VALVE_OUTPUTS"]
+    # setup_pins(valve_pins, GPIO.OUT)
     # GPIO.output(valve_pins[0], GPIO.HIGH)
+    # systi.sleep(10)
+    open_valve()
     msg = "Success!"
   except:
     msg = "Failed!"
+  print(msg)
+  return msg
+
+@app.route("/stop_water", methods=["GET"])
+def GET_stop_water():
+  msg = ""
+  try:
+    exit_cleanup()
+    msg = "Success!"
+  except:
+    msg = "Failed!"
+  print(msg)
   return msg
   
 @app.route("/pi_temperature", methods=["GET"])
@@ -137,10 +159,30 @@ def GET_pi_temperature():
     temp_json = json.dumps({"pi_temperature": temp_int})
     return temp_json
 
+# @app.route("/temp_analysis", methods=['GET'])
+def temp_analysis():
+    temps = []
+    with open('temperature.txt', "r") as f:
+        for l in f:
+            temps.append(float(l))
+    x = [i for i in range(len(temps))]
+    plt.plot(x, temps)
+    plt.xlabel('Time Stamp')
+    plt.ylabel('pi temperature')
+    plt.title('Temperature of Raspberry Pi Over Time')
+    plt.savefig('temperature_chart.png')
+
 @app.route("/camera", methods=["GET"])
 def GET_camera():
   img_path = "/home/pi/garden_services/smart_irrigation/photos/garden.jpg"
   os.system("raspistill -o "+img_path)
   img = send_file(img_path, mimetype='image/gif')
   os.system("rm "+img_path)
-  return img
+  return img, 200
+
+@app.route('/chart', methods=["GET"])
+def show_chart():
+    temp_analysis()
+    full_filename = "/home/pi/garden_services/smart_irrigation/backend/temperature_chart.png"
+    img = send_file(full_filename, mimetype='image/gif')
+    return img, 200

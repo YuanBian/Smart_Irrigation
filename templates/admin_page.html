@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="admin_style.css">
+  <link rel="stylesheet" href="/home/pi/garden_services/smart_irrigation/templates/admin_page.html">
 </head>
   <body>
     <section>
@@ -38,13 +38,21 @@
       <input type="number" id="VALVE_OUTPUTS" name="VALVE_OUTPUTS" /><br />
       <input type="submit" value="Submit updated configs" />
     </form>
-
-    <button class="water_now">Water Now</button>
-    <button class="get_camera_now">Get garden footage now</button>
-    <button class="get_sensor_now">Get sensor data now</button>
-
-    <div id="graph">
-      <img src="graph.jpg">
-    </div>
+    <form method="GET" action="/water_now">
+      <input type="submit" value="Water now" /><br />
+    </form>
+        <form method="GET" action="/http://192.168.1.38:5000/stop_water">
+      <input type="submit" value="Stop watering" /><br />
+    </form>
+        <form method="GET" action="/get_sensor_now">
+      <input type="submit" value="Get current sensor data" /><br />
+    </form>
+        <form method="GET" action="http://192.168.1.38:5000/camera">
+      <input type="submit" value="Get current footage of Garden!" /><br />
+    </form>
+  </form>
+    <form method="GET" action="http://192.168.1.38:5000/chart">
+    <input type="submit" value="Show Temperature Chart" /><br />
+  </form>
   </body>
 </html>

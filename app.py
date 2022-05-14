@@ -76,14 +76,14 @@ def GET_change_configs():
 # water now
 @app.route("/water_now", methods=["GET"])
 def GET_waterNow():
-    res = requests.get("http://127.0.0.1:5000/water")
+    res = requests.get("http://192.168.1.38:5000/water")
     return "Status code: "+str(res.status_code)
 
 # use sensor now
 @app.route("/get_sensor_now", methods=["GET"])
 def GET_sensor():
     res = requests.get("http://127.0.0.1:5000/sensor").json()
-    return "Status code: "+str(res.status_code)
+    return "Sensor data: "+str(res)
 
 # get pi temperature
 @app.route("/pi_temperature", methods=["GET"])
@@ -91,22 +91,22 @@ def GET_pi_temperature():
     r = requests.get("http://127.0.0.1:5000/pi_temperature").json()
     return r["pi_temperature"]
 
-@app.route("/get_camera_now", methods=["GET"])
-def GET_camera():
-    now = datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    img_path = "/home/pi/garden_services/smart_irrigation/photos/garden "+dt_string+".jpg"
-    r = requests.get("http://127.0.0.1:5000/pi_temperature")
-    print(r)
-    print(request.args)
-    return "img"
+# get pi temperature
+# @app.route("/get_chart", methods=["GET"])
+# def GET_chart():
+#     r = requests.get("http://127.0.0.1:5000/chart").json()
+#     return 
 
-# analysis
-@app.route("/analysis", methods=["GET"])
-def GET_analysis(mode):
-    return 0
+# @app.route("/get_camera_now", methods=["GET"])
+# def GET_camera():
+#     now = datetime.now()
+#     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+#     img_path = "/home/pi/garden_services/smart_irrigation/photos/garden "+dt_string+".jpg"
+#     r = requests.get("http://127.0.0.1:5000/pi_temperature")
+#     print(r)
+#     print(request.args)
+#     return "img"
 
-# analysis
 @app.route("/weather", methods=["GET"])
 def GET_weather():
     weather_data = requests.get(WEATHER_API).json()
