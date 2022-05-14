@@ -16,7 +16,6 @@ app.py :
  4. water now! 
  5. use sensors now!
  6. Raspberry Pi temperature
- 7. Analysis
- 8. Alerts
- 9. Get weather from API (backend will use it)
+ 8. Alerts and send emails
+ 9. process weather data from API
 ]

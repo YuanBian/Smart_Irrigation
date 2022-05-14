@@ -86,7 +86,7 @@ def temperature_job():
 sched = BackgroundScheduler(daemon=True)
 #sched.add_job(water_schedule,'cron',hour='8, 18', minute=0, timezone="America/Chicago")
 # sched.add_job(water_schedule,'interval',minutes=1)
-sched.add_job(camera_schedule,'interval',minutes=60)
+# sched.add_job(camera_schedule,'interval',minutes=60)
 sched.add_job(temperature_job, 'interval', seconds=60)
 sched.start()
 
@@ -130,17 +130,20 @@ def GET_sensor():
 @app.route("/water", methods=["GET"])
 def GET_water():
   msg = ""
+  code = 200
   try:
     # valve_pins = app.config["VALVE_OUTPUTS"]
     # setup_pins(valve_pins, GPIO.OUT)
     # GPIO.output(valve_pins[0], GPIO.HIGH)
     # systi.sleep(10)
     open_valve()
-    msg = "Success!"
+    print("WATERING NOW!")
+    msg = "Success! Watering Now!"
   except:
     msg = "Failed!"
+    code = 500
   print(msg)
-  return msg
+  return msg, code
 
 @app.route("/stop_water", methods=["GET"])
 def GET_stop_water():
@@ -149,7 +152,7 @@ def GET_stop_water():
     valve_pins = app.config["VALVE_OUTPUTS"]
     setup_pins(valve_pins, GPIO.OUT)
     GPIO.output(valve_pins[0], GPIO.LOW)
-    msg = "Success!"
+    msg = "Success! Water stopped"
   except:
     msg = "Failed!"
   print(msg)
