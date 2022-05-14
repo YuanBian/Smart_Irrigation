@@ -43,7 +43,7 @@ def send_email():
         msg = MIMEMultipart()
         msg['Subject'] = "Weather Warning"
         msg.attach(MIMEText(alerts))
-        to = ["lxamatby@gmail.com"]
+        to = ["mklimuszka@gmail.com"]
         smtp.sendmail(from_addr="yuanbian95@gmail.com",
                     to_addrs=to, msg=msg.as_string())
         smtp.quit()
