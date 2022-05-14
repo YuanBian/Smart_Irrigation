@@ -79,6 +79,11 @@ def GET_waterNow():
     res = requests.get("http://192.168.1.38:5000/water")
     return "Status code: "+str(res.status_code)
 
+@app.route("/stop_water", methods=["GET"])
+def GET_stop_water():
+    res = requests.get("http://192.168.1.38:5000/stop_water")
+    return "Status code: "+str(res.status_code)
+  
 # use sensor now
 @app.route("/get_sensor_now", methods=["GET"])
 def GET_sensor():

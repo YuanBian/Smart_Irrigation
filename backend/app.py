@@ -146,7 +146,9 @@ def GET_water():
 def GET_stop_water():
   msg = ""
   try:
-    exit_cleanup()
+    valve_pins = app.config["VALVE_OUTPUTS"]
+    setup_pins(valve_pins, GPIO.OUT)
+    GPIO.output(valve_pins[0], GPIO.LOW)
     msg = "Success!"
   except:
     msg = "Failed!"

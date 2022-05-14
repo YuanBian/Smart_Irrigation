@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <link rel="stylesheet" href="/home/pi/garden_services/smart_irrigation/templates/admin_page.html">
-</head>
+
   <body>
     <section>
       <h1>ADMINISTRATION</h1>
@@ -41,7 +39,7 @@
     <form method="GET" action="/water_now">
       <input type="submit" value="Water now" /><br />
     </form>
-        <form method="GET" action="/http://192.168.1.38:5000/stop_water">
+      <form method="GET" action="/stop_water">
       <input type="submit" value="Stop watering" /><br />
     </form>
         <form method="GET" action="/get_sensor_now">
