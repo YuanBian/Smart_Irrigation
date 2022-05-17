@@ -70,6 +70,7 @@ def GET_watch():
 @app.route("/configs", methods=["POST"])
 def GET_change_configs():
     updated_configs = dict(request.form)
+    print(updated_configs)
     res = requests.post('http://127.0.0.1:5000/configs', data=json.dumps(updated_configs))
     return "Status code: "+str(res.status_code)
 

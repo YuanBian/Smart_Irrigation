@@ -51,6 +51,11 @@ def open_valve():
   GPIO.output(valve_pins[0], GPIO.LOW)
   return "Watered!"
 
+def get_current_time():
+  now = datetime.now()
+  dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+  return dt_string
+
 def water_schedule():
   sensors_pins = app.config["SENSOR_INPUTS"]
   setup_pins(sensors_pins, GPIO.IN)
@@ -65,12 +70,14 @@ def water_schedule():
   except:
       pass
   
-  ctr = 0
-  for p in sensors_pins:
-      # if soil is dry
-      if GPIO.input(p):
-          ctr += 1
-  if not rain_level and ctr >= len(sensors_pins) /  2:
+  # ctr = 0
+  # for p in sensors_pins:
+  #     # if soil is dry
+  #     if GPIO.input(p):
+  #         ctr += 1
+  if not rain_level:# and ctr >= len(sensors_pins) /  2:
+      with open(f'water_schedule.txt', 'a') as f:
+        f.write(get_current_time+": Running water schedule for "+str(app.config["VALVE_TIME"])+" minutes!")
       print("Running water schedule!")
       open_valve()
 
@@ -85,7 +92,7 @@ def temperature_job():
 
 sched = BackgroundScheduler(daemon=True)
 #sched.add_job(water_schedule,'cron',hour='8, 18', minute=0, timezone="America/Chicago")
-# sched.add_job(water_schedule,'interval',minutes=1)
+sched.add_job(water_schedule,'cron',hour="8,18", minute=0, timezone="America/Chicago")
 # sched.add_job(camera_schedule,'interval',minutes=60)
 sched.add_job(temperature_job, 'interval', seconds=60)
 sched.start()
@@ -102,15 +109,19 @@ def GET_change_configs():
   updated_configs_raw = request.get_data().decode("utf-8")
   updated_configs = json.loads(updated_configs_raw, parse_int=int)
   for key in updated_configs:
-    print(key+": "+updated_configs[key])
+    # print(key+": "+updated_configs[key])
     if updated_configs[key]!="":
+      print()
       if key=="SENSOR_INPUTS" or key=="VALVE_OUTPUTS":
         updated_configs[key] = [int(x) for x in updated_configs[key].split(" ")]
         print(updated_configs[key])
       else:
         updated_configs[key]= int(updated_configs[key])
     else:
-      updated_configs[key]= int(app.config[key])
+      if key=="SENSOR_INPUTS" or key=="VALVE_OUTPUTS":
+        updated_configs[key]= app.config[key]
+      else:
+        updated_configs[key]= int(app.config[key])
       print(type(updated_configs[key]))
   f = open("config.json", "w")
   f.write(json.dumps(updated_configs))
