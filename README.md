@@ -10,15 +10,22 @@ The frontend and backend are both hosted on Raspberry Pi, but the frontend will 
 
 1. After cloning the code to your local machine, and plugging in the moisture sensors and valves to your Raspberry Pi, change the configs of SENSOR_INPUTS and VALVE_OUTPUTS in smart_irrigation/backend/config.json.
 
-2. Set up python venv
+2. Set up python venv:
+
    python3 -m venv venv
+
    source ./venv/bin
 
-3. install required packages inside the venv
+3. install required packages inside the venv:
+
    pip install -r requirements
 
 4. run:
+
    cd smart_irrigation/backend
+
    flask run &
+
    cd ../
+
    flask run &
