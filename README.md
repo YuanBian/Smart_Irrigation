@@ -1,6 +1,6 @@
 # Smart Irrigation System
 
-For the final project in the IoT class, I designed a smart irrigation system for my backyard. The system will detect the current weather from open weather APIs, and moisture level from moisture sensors plugged into the ground, and automatically water the guarden through soaker hoses if conditions are met (i.e. not raining today && ground is not wet).
+I designed this smart irrigation system for my backyard. The system will detect the current weather from open weather APIs, and moisture level from moisture sensors plugged into the ground, and automatically water the guarden through soaker hoses if conditions are met (i.e. not raining today && ground is not wet).
 
 The backend and frontend of the system is created by Python Flask App. The backend interacts with the hardwares of the Raspberry Pi, triggered by API calls from the frontend. The frontend hosts interface that allows user to interact with the backend's hardware, and to manually configure settings for the backend (i.e. how long the irrigation lasts, what time to start irrigation, etc).
 
