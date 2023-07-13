@@ -19,6 +19,7 @@ WEATHER_API = os.getenv("WEATHER_API")
 APP_PASSWORD = os.getenv("APP_PASSWORD")
 FROM_EMAIL = os.getenv("FROM_EMAIL")
 TO_EMAIL = os.getenv("TO_EMAIL")
+BACKEND_API = os.getenv("BACKEND_API")
 
 
 def alerts_getter():
@@ -80,36 +81,34 @@ def GET_watch():
 def GET_change_configs():
     updated_configs = dict(request.form)
     print(updated_configs)
-    res = requests.post(
-        "http://127.0.0.1:5000/configs", data=json.dumps(updated_configs)
-    )
+    res = requests.post(BACKEND_API + "/configs", data=json.dumps(updated_configs))
     return "Status code: " + str(res.status_code)
 
 
 # water now
 @app.route("/water_now", methods=["GET"])
 def GET_waterNow():
-    res = requests.get("http://192.168.1.38:5000/water")
+    res = requests.get(BACKEND_API + "/water")
     return "Status code: " + str(res.status_code)
 
 
 @app.route("/stop_water", methods=["GET"])
 def GET_stop_water():
-    res = requests.get("http://192.168.1.38:5000/stop_water")
+    res = requests.get(BACKEND_API + "/stop_water")
     return "Status code: " + str(res.status_code)
 
 
 # use sensor now
 @app.route("/get_sensor_now", methods=["GET"])
 def GET_sensor():
-    res = requests.get("http://127.0.0.1:5000/sensor").json()
+    res = requests.get(BACKEND_API + "/sensor").json()
     return "Sensor data: " + str(res)
 
 
 # get pi temperature
 @app.route("/pi_temperature", methods=["GET"])
 def GET_pi_temperature():
-    r = requests.get("http://127.0.0.1:5000/pi_temperature").json()
+    r = requests.get(BACKEND_API + "/pi_temperature").json()
     return r["pi_temperature"]
 
 

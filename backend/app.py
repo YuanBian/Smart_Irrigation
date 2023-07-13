@@ -21,6 +21,7 @@ GPIO.setmode(GPIO.BCM)
 load_dotenv()
 WEATHER_API = os.getenv("WEATHER_API")
 IMG_PATH = os.getenv("IMG_PATH")
+CHART_PATH = os.getenv("CHART_PATH")
 
 
 def setup_pins(pins, GPIO_TYPE):
@@ -183,7 +184,7 @@ def temp_analysis():
 
 @app.route("/camera", methods=["GET"])
 def GET_camera():
-    img_path = "/home/pi/garden_services/smart_irrigation/photos/garden.jpg"
+    img_path = CHART_PATH + "/garden.jpg"
     os.system("raspistill -o " + img_path)
     img = send_file(img_path, mimetype="image/gif")
     os.system("rm " + img_path)
@@ -193,8 +194,6 @@ def GET_camera():
 @app.route("/chart", methods=["GET"])
 def show_chart():
     temp_analysis()
-    full_filename = (
-        "/home/pi/garden_services/smart_irrigation/backend/temperature_chart.png"
-    )
+    full_filename = CHART_PATH
     img = send_file(full_filename, mimetype="image/gif")
     return img, 200
